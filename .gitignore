@@ -67,3 +67,6 @@ Thumbs.db
 .coverage
 htmlcov/
 .pytest_cache/
+
+adapter_checkpoint/
+outputs/
