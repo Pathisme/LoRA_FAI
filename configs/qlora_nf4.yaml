@@ -1,0 +1,50 @@
+# QLoRA Configuration - NF4 4-bit Quantization
+# Target hardware: NVIDIA T4 (16 GB VRAM)
+
+model:
+  name: "your-base-model"
+  trust_remote_code: false
+
+quantization:
+  load_in_4bit: true
+  quant_type: "nf4"
+  double_quant: true
+  compute_dtype: "float16"
+
+lora:
+  rank: 8
+  alpha: 16
+  dropout: 0.05
+  bias: "none"
+
+  # Common attention projection layers.
+  # Adjust according to the selected base model.
+  target_modules:
+    - "q_proj"
+    - "k_proj"
+    - "v_proj"
+    - "o_proj"
+
+training:
+  per_device_train_batch_size: 1
+  gradient_accumulation_steps: 8
+  learning_rate: 0.0002
+  num_train_epochs: 3
+  max_sequence_length: 512
+
+  fp16: true
+  bf16: false
+  gradient_checkpointing: true
+
+  optim: "paged_adamw_8bit"
+  logging_steps: 10
+  save_strategy: "epoch"
+
+memory:
+  target_gpu: "NVIDIA T4"
+  target_vram_gb: 6
+  use_gradient_checkpointing: true
+
+output:
+  save_adapter_only: true
+  save_directory: "outputs/qlora_nf4"
